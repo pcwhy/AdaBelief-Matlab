@@ -1,5 +1,7 @@
 # AdaBelief-Matlab
 
+[![DOI](https://zenodo.org/badge/308234256.svg)](https://zenodo.org/badge/latestdoi/308234256)
+
 The original implementation of AdaBelief is in:
 
 https://juntang-zhuang.github.io/adabelief/
