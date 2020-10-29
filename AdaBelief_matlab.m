@@ -149,7 +149,7 @@ for epoch = 1:numEpochs
         if isempty(velocities)
             velocities = packScalar(gradients, 0);
             learnRates = packScalar(gradients, learnRate);
-%             momentums = packScalar(gradients, momentum);
+%             momentums = packScalar(gradients, momentum); % Only for SGD optimizer!
             momentums = packScalar(gradients, 0);
             L2Foctors = packScalar(gradients, 0);            
             gradientMasks = packScalar(gradients, 1);   
