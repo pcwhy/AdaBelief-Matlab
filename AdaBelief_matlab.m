@@ -237,7 +237,9 @@ function [params,velocityUpdates,momentumUpdate] = adamFunction(params, rawParam
      velocityUpdates = vt;
 %     h_mt = mt./(1-b1.^t);
 %     h_vt = vt./(1-b2.^t);
-    params = params - 0.001.*mt./(sqrt(vt)+e).*gradientMasks;
+%     params = params - 0.001.*mt./(sqrt(vt)+e).*gradientMasks;
+    params = params - learnRates.*mt./(sqrt(vt)+e).*gradientMasks;
+
 end
 
 
