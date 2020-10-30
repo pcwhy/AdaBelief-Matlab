@@ -18,8 +18,3 @@ b) Our Zero-bias dense layer enabled DNN seems to have even better compatibility
 More details of the zero-bias dense layer can be found at:
 https://arxiv.org/abs/2009.02267
 
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png?raw=true)
-
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png?raw=true)
-
-
