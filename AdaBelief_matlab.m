@@ -76,6 +76,8 @@ numEpochs = 4;
 miniBatchSize = 20;
 plots = "training-progress";
 executionEnvironment = "auto";
+totalIters = 0;
+
 if plots == "training-progress"
     figure(10);
     lineLossTrain = animatedline('Color','#0072BD','lineWidth',1.5);
@@ -122,6 +124,7 @@ for epoch = 1:numEpochs
     % Loop over mini-batches.
     for i = 1:numIterationsPerEpoch
         iteration = iteration + 1;
+        totalIters = totalIters + 1;
         % Read mini-batch of data and convert the labels to dummy
         % variables.
         idx = (i-1)*miniBatchSize+1:i*miniBatchSize;
@@ -162,10 +165,11 @@ for epoch = 1:numEpochs
 %         [dlnet, velocities] = dlupdate(@sgdmFunctionL2, ...
 %             dlnet, gradients, velocities, ...
 %             learnRates, momentums, L2Foctors, gradientMasks);
-
+        totalIterPk = packScalar(gradients, totalIters);
         [dlnet, velocities, momentums] = dlupdate(@adamFunction, ...
                     dlnet, gradients, velocities, ...
-                    learnRates, momentums, L2Foctors, gradientMasks);   
+                    learnRates, momentums, L2Foctors, gradientMasks, ...
+                    totalIterPk);    
 
         % Display the training progress.
         if plots == "training-progress"
@@ -224,24 +228,30 @@ function [gradients,state,loss] = modelGradientsOnWeights(dlnet,dlX,Y)
     %gradients = dlgradient(loss,dlnet.Learnables(4,:));
 end
 
-
 function [params,velocityUpdates,momentumUpdate] = adamFunction(params, rawParamGradients,...
-    velocities, learnRates, momentums, L2Foctors, gradientMasks)
+    velocities, learnRates, momentums, L2Foctors, gradientMasks, iters)
+    % https://arxiv.org/pdf/2010.07468.pdf %%AdaBelief
+    % https://arxiv.org/pdf/1711.05101.pdf  %%DeCoupled Weight Decay 
     b1 = 0.9; 
     b2 = 0.999;
-    e = 1e-3;
+    e = 1e-16;
+    curIter = iters(:);
+    curIter = curIter(1);
+    
     gt = rawParamGradients;
-    mt = momentums.*b1 + (1-b1).*gt;
-    vt = velocities.*b2 + (1-b2).*((gt-mt).^2);
+    mt = (momentums.*b1 + ((1-b1)).*gt);
+    vt = (velocities.*b2 + ((1-b2)).*((gt-mt).^2));
+
      momentumUpdate = mt;
      velocityUpdates = vt;
-%     h_mt = mt./(1-b1.^t);
-%     h_vt = vt./(1-b2.^t);
-%     params = params - 0.001.*mt./(sqrt(vt)+e).*gradientMasks;
-    params = params - learnRates.*mt./(sqrt(vt)+e).*gradientMasks;
+    h_mt = mt./(1-b1.^curIter);
+    h_vt = (vt+e)./(1-b2.^curIter);
+    params = params - 0.001.*(mt./(sqrt(vt)+e)).*gradientMasks...
+        -L2Foctors.*params.*gradientMasks;
+%     params = params - 0.001.*(h_mt./(sqrt(h_vt)+e)).*gradientMasks...
+%         -L2Foctors.*params.*gradientMasks;
 
 end
-
 
 function param = sgdFunction(param,paramGradient)
     learnRate = 0.01;
