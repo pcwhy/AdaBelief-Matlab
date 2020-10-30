@@ -18,6 +18,12 @@ b) Our Zero-bias dense layer enabled DNN seems to have even better compatibility
 More details of the zero-bias dense layer can be found at:
 https://arxiv.org/abs/2009.02267
 
+Updates on Oct-30-2020:
+
+I implemented the decoupled weight decay, but it doesn't play the Black Magic. Comparably, in SGD, I also disabled the L2 regularization, I think it will be fair to let the two models run freely.
+
+I implemented the bias correction, indeed it helps in the regular CNN and DNN, but it does not work in my own DNN with a zero-bias (Zb) dense layer. Specifically, Zb is a differentiable template matching layer using cosine similarity to increase model explainability.
+
 ![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png?raw=true)
 
 ![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png?raw=true)
