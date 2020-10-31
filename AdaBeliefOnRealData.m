@@ -3,11 +3,14 @@ close all;
 clear;
 rng default;
 
+%%----------- Check Point 0:  
+
 % Please download the dataset from
 % https://drive.google.com/uc?export=download&id=1N-eImoAA3QFPu3cBJd-1WIUH0cqw2RoT
 % Or
 % https://ieee-dataport.org/open-access/24-hour-signal-recording-dataset-labels-cybersecurity-and-iot
 load('adsb_records_qt.mat');
+%%%%---------- End of Check Point 0
 
 payloadMatrix = reshape(payloadMatrix', ...
     length(payloadMatrix)/length(msgIdLst), length(msgIdLst))';
