@@ -26,17 +26,18 @@ b) Our Zero-bias dense layer enabled DNN seems to have even better compatibility
 More details of the zero-bias dense layer can be found at:
 https://arxiv.org/abs/2009.02267
 
-Updates on Oct-30-2020:
-
-I implemented the decoupled weight decay, but it doesn't play the Black Magic. Comparably, in SGD, I also disabled the L2 regularization, I think it will be fair to let the two models run freely.
-
-I implemented the bias correction, indeed it helps in the regular CNN and DNN, but it does not work in my own DNN with a zero-bias (Zb) dense layer. Specifically, Zb is a differentiable template matching layer using cosine similarity to increase model explainability.
 
 Update on Oct-31-2020
 
 After a discussion with Juntang-Zhang at https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22 We realize that the Hyperparams of AdaBelief should be different from SGDM. Therefore, we posted an implementation, AdaBeliefOnRealDataOptimizedParam.m using optimized parameters specifically for AdaBelief.
 
 In the figures, dense represents regular DNN with dense layer, z.b. represents the DNN with the zero-bias dense layer, B.C. represents bias correction, and, H.P. denotes Hyperparams.
+
+Updates on Oct-30-2020:
+
+I implemented the decoupled weight decay, but it doesn't play the Black Magic. Comparably, in SGD, I also disabled the L2 regularization, I think it will be fair to let the two models run freely.
+
+I implemented the bias correction, indeed it helps in the regular CNN and DNN, but it does not work in my own DNN with a zero-bias (Zb) dense layer. Specifically, Zb is a differentiable template matching layer using cosine similarity to increase model explainability.
 
 ![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png)
 ![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png)
