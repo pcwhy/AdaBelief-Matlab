@@ -36,7 +36,3 @@ Update on Oct-31-2020
 
 After a discussion with Juntang-Zhang at https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22 We realize that the Hyperparams of AdaBelief should be different from SGDM. Therefore, we posted another implementation, AdaBeliefOnRealDataOptimizedParam.m
 
-
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png)
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png)
-
