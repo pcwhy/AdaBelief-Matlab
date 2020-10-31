@@ -3,6 +3,14 @@ close all;
 clear;
 rng default;
 
+%%%%%%%%%%%%%%%%%%% Notice %%%%%%%%%%%%%%%%%%%
+%%%%
+%%%% Some parts of this code is contributed by Juntang-Zhang 
+%%%% at https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22 
+%%%%
+%%%%%%%%%%%%%%%%%%% End of notice %%%%%%%%%%%%
+
+
 %%----------- Check Point 0:  
 
 % Please download the dataset from
