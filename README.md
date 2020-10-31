@@ -34,9 +34,8 @@ I implemented the bias correction, indeed it helps in the regular CNN and DNN, b
 
 Update on Oct-31-2020
 
-After a discussion with Juntang-Zhang at https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22 We realize that the Hyperparams of AdaBelief should be different from SGDM. Therefore, we posted another implementation, AdaBeliefOnRealDataOptimizedParam.m
+After a discussion with Juntang-Zhang at https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22 We realize that the Hyperparams of AdaBelief should be different from SGDM. Therefore, we posted an implementation, AdaBeliefOnRealDataOptimizedParam.m using optimized parameters specifically for AdaBelief.
 
+In the figures, dense represents regular DNN with dense layer, z.b. represents the DNN with the zero-bias dense layer, B.C. represents bias correction, and, H.P. denotes Hyperparams.
 
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png)
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png)
 
