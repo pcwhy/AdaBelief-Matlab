@@ -1,8 +1,3 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Please be noted that part of this code and some critical hyperparams are contributed by juntang-zhuang
-w.r.t.: https://github.com/juntang-zhuang/Adabelief-Optimizer/issues/22
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
 clc;
 close all;
 clear;
@@ -220,7 +215,7 @@ for epoch = 1:numEpochs
         if isempty(velocities)
             velocities = packScalar(gradients, 0);
             learnRates = packScalar(gradients, learnRate);
-%             momentumSGDs = packScalar(gradients, momentumSGD);
+            momentumSGDs = packScalar(gradients, momentumSGD);
             momentums = packScalar(gradients, 0);
             L2Foctors = packScalar(gradients, L2RegularizationFactor);            
             wd = packScalar(gradients, L2RegularizationFactor);  
