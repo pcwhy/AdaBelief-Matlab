@@ -6,7 +6,7 @@ The original implementation of AdaBelief is in:
 
 https://juntang-zhuang.github.io/adabelief/
 
-This is my matlab implementation of the AdaBelief which is much simpler than the python version. Meanwhile, a toy DNN model along with real world example are includeded.
+This is my matlab implementation of the AdaBelief which is much simpler than the python version. Meanwhile, a toy DNN model along with real-world example are includeded. Noted that makeDataTensor.m, extractNoise.m, countmember.m are data processing modules solely for the real-world example.
 
 Remember to download dataset from the following urls if you want to run the AdaBeliefOnRealData.m
 
