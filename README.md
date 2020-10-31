@@ -20,7 +20,7 @@ We compare the performance of AdaBelief and SGD with momentum using real-world s
 https://ieee-dataport.org/open-access/24-hour-signal-recording-dataset-labels-cybersecurity-and-iot
 
 We set learning rate of AdaBelief to 0.001 with other configuration identical to their paper; We set SGD with momentum with learning rate 0.001, initial momentum 0.9 velocity 0. And discover that:
-a) The AdaBelief is not guaranteed to converge to as good solutions as what SGD with momentum can reach. Indeed AdaBelief converges slightly faster than SGD at early training stages.
+a) Using default hyperparams, AdaBelief is not guaranteed to converge to as good solutions as what SGD with momentum can reach. Indeed AdaBelief converges slightly faster than SGD at early training stages. If hyperparms are tuned, AdaBelief could have a high probability to converge faster and approach the optimal convergence where SGDM can do.
 
 b) Our Zero-bias dense layer enabled DNN seems to have even better compatibility with the AdaBelief. 
 More details of the zero-bias dense layer can be found at:
