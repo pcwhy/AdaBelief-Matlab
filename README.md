@@ -39,5 +39,4 @@ After a discussion with Juntang-Zhang at https://github.com/juntang-zhuang/Adabe
 In the figures, dense represents regular DNN with dense layer, z.b. represents the DNN with the zero-bias dense layer, B.C. represents bias correction, and, H.P. denotes Hyperparams.
 
 
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMFC.png)
-![alt text](https://github.com/pcwhy/AdaBelief-Matlab/blob/main/TrainingSGDADAMZb.png)
+
