@@ -2,13 +2,16 @@ clc;
 close all;
 clear;
 rng default;
+
 %%----------- Check Point 0:  
+
 % Please download the dataset from
 % https://drive.google.com/uc?export=download&id=1N-eImoAA3QFPu3cBJd-1WIUH0cqw2RoT
 % Or
 % https://ieee-dataport.org/open-access/24-hour-signal-recording-dataset-labels-cybersecurity-and-iot
 load('adsb_records_qt.mat');
 %%%%---------- End of Check Point 0
+
 payloadMatrix = reshape(payloadMatrix', ...
     length(payloadMatrix)/length(msgIdLst), length(msgIdLst))';
 rawIMatrix = reshape(rawIMatrix', ...
@@ -23,6 +26,7 @@ else
    rawCompMatrix = rawCompMatrix(:,1:1024); 
 end
 dateTimeLst = datetime(uint64(timeStampLst),'ConvertFrom','posixtime','TimeZone','America/New_York','TicksPerSecond',1e3,'Format','dd-MMM-yyyy HH:mm:ss.SSS');
+
 uIcao = unique(icaoLst);
 c = countmember(uIcao,icaoLst);
 icaoOccurTb = [uIcao,c];
@@ -33,12 +37,16 @@ cond = logical(cond1.*cond2);
 selectedPlanes = icaoOccurTb(cond,:);
 unknowPlanes = icaoOccurTb(~cond,:);
 allTrainData = [icaoLst, abs(rawCompMatrix)];
+
 selectedBasebandData = [];
 selectedRawCompData = [];
+
 unknownBasebandData = [];
 unknownRawCompData = [];
+
 minTrainChance = 100;
 maxTrainChance = 500;
+
 for i = 1:size(selectedPlanes,1)
     selection = allTrainData(:,1)==selectedPlanes(i,1);
     localBaseband = allTrainData(selection,:);
@@ -58,6 +66,7 @@ for i = 1:size(selectedPlanes,1)
     selectedBasebandData = [selectedBasebandData; localBaseband];
     selectedRawCompData = [selectedRawCompData; localComplex];    
 end
+
 for i = 1:size(unknowPlanes,1)
     selection = allTrainData(:,1)==unknowPlanes(i,1);
     localBaseband = allTrainData(selection,:);
@@ -66,12 +75,15 @@ for i = 1:size(unknowPlanes,1)
     unknownBasebandData = [unknownBasebandData; localBaseband];
     unknownRawCompData = [unknownRawCompData; localComplex];    
 end
+
 randSeries = randperm(size(selectedBasebandData,1));
 selectedBasebandData = selectedBasebandData(randSeries,:);
 selectedRawCompData = selectedRawCompData(randSeries,:);
+
 randSeries = randperm(size(unknownBasebandData,1));
 unknownBasebandData = unknownBasebandData(randSeries,:);
 unknownRawCompData = unknownRawCompData(randSeries,:);
+
 % 
 % for i = 1:size(selectedBasebandData,1)
 %     mu = mean(selectedBasebandData(i,2:end));
@@ -97,8 +109,11 @@ unknownRawCompData = unknownRawCompData(randSeries,:);
 %     
 %     selectedRawCompData(i,1:end) = cleanInputReal+cleanInputImag.*1j;    
 % end
+
+
 [X,cX,Y,cY] = makeDataTensor(selectedBasebandData,selectedRawCompData);
 [uX,cuX,uY,cuY] = makeDataTensor(unknownBasebandData,unknownRawCompData);
+
 lookUpTab = [unique([Y;cY]),[1:length(unique([Y;cY]))]'];
 Y2 = Y;
 for i = 1:size(Y)
@@ -108,10 +123,13 @@ cY2 = cY;
 for i = 1:size(cY)
     cY2(i) = lookUpTab(find(lookUpTab(:,1) == cY(i)),2);
 end
+
 Y = Y2;
 cY = cY2;
+
 inputSize = [size(X,1) size(X,2) size(X,3)];
 numClasses = size(unique(selectedBasebandData(:,1)),1);
+
 layers = [
     imageInputLayer(inputSize, 'Name', 'input', 'Mean', 0)
     convolution2dLayer(5,10, 'Name', 'conv2d_1')
@@ -127,15 +145,17 @@ layers = [
 %%----------- Check Point 1:  
 %% Here you can specify whether to use regular dense layer 
 %% or zero-bias dense layer
-%      fullyConnectedLayer(numClasses, 'Name', 'Fingerprints') 
-    zeroBiasFCLayer(numClasses,numClasses,'Fingerprints',[])
+     fullyConnectedLayer(numClasses, 'Name', 'Fingerprints') 
+    %zeroBiasFCLayer(numClasses,numClasses,'Fingerprints',[])
 %%----------- End of Check Point 1:         
     yxSoftmax('softmax_1')
     classificationLayer('Name', 'classify_1')
     ];
+
 lgraph = layerGraph(layers);
 lgraph = connectLayers(lgraph, 'relu_1', 'add_1/in2');
 plot(lgraph);
+
 XTrain = X;
 YTrain = Y;
 numEpochs = 3;
@@ -177,6 +197,7 @@ classes = categorical(YTrain);
 lgraph2 = lgraph; % No old weights
 lgraph2 = lgraph2.removeLayers('classify_1');
 dlnet = dlnetwork(lgraph2);
+
 % Loop over epochs.
 totalIters = 0;
 for epoch = 1:numEpochs
@@ -215,7 +236,7 @@ for epoch = 1:numEpochs
         if isempty(velocities)
             velocities = packScalar(gradients, 0);
             learnRates = packScalar(gradients, learnRate);
-            momentumSGDs = packScalar(gradients, momentumSGD);
+%             momentumSGDs = packScalar(gradients, momentumSGD);
             momentums = packScalar(gradients, 0);
             L2Foctors = packScalar(gradients, L2RegularizationFactor);            
             wd = packScalar(gradients, L2RegularizationFactor);  
@@ -244,6 +265,7 @@ for epoch = 1:numEpochs
 %         [dlnet] = dlupdate(@sgdFunction, ...
 %             dlnet, gradients); % the vanilla
 %%%%-----------End of Check Point 2 
+
         % Display the training progress.
         if plots == "training-progress"
             D = duration(0,0,toc(start),'Format','hh:mm:ss');
@@ -261,6 +283,8 @@ for epoch = 1:numEpochs
     end
 end
 accuracy = cvAccuracy(dlnet, cX, categorical(cY), miniBatchSize, executionEnvironment, 1)
+
+
 function accuracy = cvAccuracy(dlnet, XTest, YTest, miniBatchSize, executionEnvironment, confusionChartFlg)
     dlXTest = dlarray(XTest,'SSCB');
     if (executionEnvironment == "auto" && canUseGPU) || executionEnvironment == "gpu"
@@ -275,6 +299,7 @@ function accuracy = cvAccuracy(dlnet, XTest, YTest, miniBatchSize, executionEnvi
         confusionchart(YPred(:),YTest(:));
     end
 end
+
 function dlYPred = modelPredictions(dlnet,dlX,miniBatchSize)
     numObservations = size(dlX,4);
     numIterations = ceil(numObservations / miniBatchSize);
@@ -285,6 +310,8 @@ function dlYPred = modelPredictions(dlnet,dlX,miniBatchSize)
         dlYPred(:,idx) = predict(dlnet,dlX(:,:,:,idx));
     end
 end
+
+
 function [gradients,state,loss,classificationLoss] = modelGradientsOnWeights(dlnet,dlX,Y)
 %   %This is only used with softmax of matlab which only applies softmax
 %   on 'C' and 'B' channels.
@@ -301,11 +328,13 @@ function [gradients,state,loss,classificationLoss] = modelGradientsOnWeights(dln
     end
     
     classificationLoss = crossentropy(squeeze(dlYPred),Y) + scalarL2Factor*penalty;
+
     loss = classificationLoss;
 %     loss = classificationLoss + 0.2*(max(max(rawPredictions))-min(max(rawPredictions)));
     gradients = dlgradient(loss,dlnet.Learnables);
     %gradients = dlgradient(loss,dlnet.Learnables(4,:));
 end
+
 function [params,velocityUpdates,momentumUpdate] = adamFunction(params, rawParamGradients,...
     velocities, learnRates, momentums, L2Foctors, gradientMasks, iters)
     % https://arxiv.org/pdf/2010.07468.pdf %%AdaBelief
@@ -319,6 +348,7 @@ function [params,velocityUpdates,momentumUpdate] = adamFunction(params, rawParam
     gt = rawParamGradients;
     mt = (momentums.*b1 + ((1-b1)).*gt);
     vt = (velocities.*b2 + ((1-b2)).*((gt-mt).^2)) + e;
+
     momentumUpdate = mt;
     velocityUpdates = vt;
     h_mt = mt./(1-b1.^curIter);
@@ -335,10 +365,12 @@ function [params,velocityUpdates,momentumUpdate] = adamFunction(params, rawParam
 %%%%
 %%%%-----------End of Check Point 3 
 end
+
 function param = sgdFunction(param,paramGradient)
     learnRate = 0.01;
     param = param - learnRate.*paramGradient;
 end
+
 function [params, velocityUpdates] = sgdmFunction(params, paramGradients,...
     velocities, learnRates, momentums)
 % https://towardsdatascience.com/stochastic-gradient-descent-momentum-explanation-8548a1cd264e
@@ -346,6 +378,7 @@ function [params, velocityUpdates] = sgdmFunction(params, paramGradients,...
     velocityUpdates = momentums.*velocities+0.001.*paramGradients;
     params = params - velocityUpdates;
 end
+
 function [params, velocityUpdates] = sgdmFunctionL2(params, rawParamGradients,...
     velocities, learnRates, momentums, L2Foctors, gradientMasks)
 % https://towardsdatascience.com/stochastic-gradient-descent-momentum-explanation-8548a1cd264e
@@ -354,6 +387,7 @@ function [params, velocityUpdates] = sgdmFunctionL2(params, rawParamGradients,..
     velocityUpdates = momentums.*velocities+learnRates.*paramGradients;
     params = params - (velocityUpdates).*gradientMasks;
 end
+
 function tabVars = packScalar(target, scalar)
 % The matlabs' silly design results in such a strange function
     tabVars = target;
