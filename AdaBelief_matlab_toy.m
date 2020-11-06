@@ -63,7 +63,7 @@ layers = [
     batchNormalizationLayer('Name', 'batchNorm_1')
     reluLayer('Name', 'relu_1')
     tensorVectorLayer('Flatten')   
-    FCLayer(1682,numClasses,'Fingerprints',[])
+%     FCLayer(1682,numClasses,'Fingerprints',[])
     zeroBiasFCLayer(1682,numClasses,'Fingerprints',[])    
     %softmaxLayer('Name', 'softmax_1')
     yxSoftmax('softmax_1')
